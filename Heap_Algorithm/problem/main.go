@@ -1,15 +1,19 @@
 package main
 
-import "fmt"
+import (
+    "errors"
+    "fmt"
+)
 
 func main() {
-	var subsectionArraysize int64 = 3
+	var subsectionArraysize int64 = 4
 	var totalStuInsamecourseAndSub int64 = 10
 	fmt.Println("subsectionArraysize :", subsectionArraysize)
 	fmt.Println("totalStuInsamecourseAndSub :", totalStuInsamecourseAndSub)
 	var i int64
 	for i = 0; i < totalStuInsamecourseAndSub; i++ {
-		fmt.Println("student ", i+1, " is in subsection in (oldalgo)", oldsubsectionalgorithm(subsectionArraysize, i))
+		var index int64= oldsubsectionalgorithm(subsectionArraysize, i)
+		fmt.Println("student ", i+1, " is in index of (RoundRobinAlgo) :",index,"& subsection :",index+1 )
 	}
 	fmt.Println("New Subsection Algorithm (Heap algorithm)-----------")
 	NewSubSectionAlgorithm(subsectionArraysize, totalStuInsamecourseAndSub)
@@ -22,6 +26,10 @@ func oldsubsectionalgorithm(subsectionArraysize int64, totalStuInsamecourseAndSu
 }
 
 func NewSubSectionAlgorithm(subsectionArraysize int64, totalStuInsamecourseAndSub int64)  {
+	if(subsectionArraysize >= 10){
+		errors.New("Subsection array size should be less than 10")
+		return
+	}
 	var subsectionArray = makeArray(int(subsectionArraysize))
 	fmt.Println("subsectionArray :", subsectionArray)
 	fmt.Println("permutation Block  :",permutationBlock(subsectionArray))
