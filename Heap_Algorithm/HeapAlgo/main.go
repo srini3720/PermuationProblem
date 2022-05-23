@@ -35,4 +35,5 @@ func main() {
 	array := makeArray(num)
 	fmt.Println("array func  :",array)
 	fmt.Println("permutation func  :",permutationBlock(array))
+	
 }
