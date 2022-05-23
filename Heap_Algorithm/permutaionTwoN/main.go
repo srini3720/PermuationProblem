@@ -6,11 +6,12 @@ import (
 	"math/rand"
 	"time"
 )
+
 var arrayIndex int = 0
-var randomSequence []int 
+var randomSequence []int
 
 func main() {
-	var subsectionArraysize int64 = 3 
+	var subsectionArraysize int64 = 3
 	var totalStuInsamecourseAndSub int64 = 10
 	fmt.Println("subsectionArraysize :", subsectionArraysize)
 	fmt.Println("totalStuInsamecourseAndSub :", totalStuInsamecourseAndSub)
@@ -45,13 +46,14 @@ func NewSubSectionAlgorithm(subsectionArraysize int64) int {
 		var randomSubsection = randomSequence[arrayIndex]
 		arrayIndex++
 		return randomSubsection
-	}  
+	}
 	if len(randomSequence) >= arrayIndex {
 		arrayIndex = 0
 		subsectionArray = makeArray(int(subsectionArraysize))
 		permutesArray = permutationBlock(subsectionArray)
 		fmt.Println("permutation Block  :", permutesArray)
 		blockSize = len(permutesArray)
+		fmt.Println("permutation ways  :", blockSize)
 		randomBlockNumber = randomNumber(int(blockSize))
 		fmt.Println("Random  :", randomBlockNumber)
 		randomSequence = permutesArray[randomBlockNumber]
@@ -61,15 +63,20 @@ func NewSubSectionAlgorithm(subsectionArraysize int64) int {
 		return randomSubsection
 
 		// arrayIndex = arrayIndex + 1
-	} 
+	}
 	return 0
 }
 
 func makeArray(num int) []int {
-	array := make([]int, num)
+	arrayOne := make([]int, num)
 	for i := 0; i < num; i++ {
-		array[i] = i + 1
+		arrayOne[i] = i + 1
 	}
+	arrayTwo := make([]int, num)
+	for i := 0; i < num; i++ {
+		arrayTwo[i] = i + 1
+	}
+	var array []int = append(arrayOne, arrayTwo...)
 	return array
 }
 
