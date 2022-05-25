@@ -3,25 +3,24 @@ package main
 import (
 	"errors"
 	"fmt"
-	"math/rand"
 	"time"
 	"runtime"
 )
 
-var arrayIndex int = 0
-var randomSequence []int
+var studentSubsectionallotmentIndex int = 0
+var subsectionSequence []int
+var subsectionSequenceBlockIndex int
+var permutationlimit int = 100
+
 
 func main() {
+	
 	start := time.Now()
-	var subsectionArraysize int64 = 1
+	var subsectionArraysize int64 = 7
 	var totalStuInsamecourseAndSub int64 = 1
 	fmt.Println("subsectionArraysize :", subsectionArraysize)
 	fmt.Println("totalStuInsamecourseAndSub :", totalStuInsamecourseAndSub)
 	var i int64
-	for i = 0; i < totalStuInsamecourseAndSub; i++ {
-		var index int64 = oldsubsectionalgorithm(subsectionArraysize, i)
-		fmt.Println("student ", i+1, " is in index of (RoundRobinAlgo) :", index, "& subsection :", index+1)
-	}
 	fmt.Println("------------------------HeapAlgorithm----------------------------")
 	for i = 0; i < totalStuInsamecourseAndSub; i++ {
 		var subsection int = NewSubSectionAlgorithm(subsectionArraysize)
@@ -30,44 +29,38 @@ func main() {
 	fmt.Println("Time for 10 students allotment ",time.Since(start))
 	runtime.GC()
 	PrintMemUsage()
-
-}
-func oldsubsectionalgorithm(subsectionArraysize int64, totalStuInsamecourseAndSub int64) int64 {
-	var SubsectionIDIndex int64
-	SubsectionIDIndex = totalStuInsamecourseAndSub % subsectionArraysize
-	return SubsectionIDIndex
 }
 
 func NewSubSectionAlgorithm(subsectionArraysize int64) int {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
 	if subsectionArraysize >= 10 {
 		errors.New("Subsection array size should be less than 10")
 	}
 	var subsectionArray []int
 	var permutesArray [][]int
 	var blockSize int
-	var randomBlockNumber int
-
-	if len(randomSequence) != 0 && arrayIndex < len(randomSequence) {
-		var randomSubsection = randomSequence[arrayIndex]
-		arrayIndex++
+	if len(subsectionSequence) != 0 && studentSubsectionallotmentIndex < len(subsectionSequence) {
+		var randomSubsection = subsectionSequence[studentSubsectionallotmentIndex]
+		studentSubsectionallotmentIndex++
 		return randomSubsection
 	}
-	if len(randomSequence) >= arrayIndex {
-		arrayIndex = 0
+	if len(subsectionSequence) >= studentSubsectionallotmentIndex {
+		studentSubsectionallotmentIndex = 0
+		fmt.Println("PermutationLimit :", permutationlimit)
 		subsectionArray = makeArray(int(subsectionArraysize))
 		permutesArray = permutationBlock(subsectionArray)
 		fmt.Println("permutation Block  :", permutesArray)
 		blockSize = len(permutesArray)
-		fmt.Println("permutation ways  :", blockSize)
-		randomBlockNumber = randomNumber(int(blockSize))
-		fmt.Println("Random  :", randomBlockNumber)
-		randomSequence = permutesArray[randomBlockNumber]
-		fmt.Println("Random sequence", randomSequence)
-		var randomSubsection = randomSequence[arrayIndex]
-		arrayIndex++
-		return randomSubsection
+		fmt.Println("permutation Block size  :", blockSize)
+		subsectionSequence = permutesArray[subsectionSequenceBlockIndex]
+		fmt.Println("subsection sequence", subsectionSequence)
+		var selectedSubsection = subsectionSequence[studentSubsectionallotmentIndex]
+		subsectionSequenceBlockIndex++
+		studentSubsectionallotmentIndex++
+		return selectedSubsection
 
-		// arrayIndex = arrayIndex + 1
+		// studentSubsectionallotmentIndex = studentSubsectionallotmentIndex + 1
 	}
 	return 0
 }
@@ -87,10 +80,15 @@ func makeArray(num int) []int {
 }
 
 func permutationBlock(array []int) (permutesArray [][]int) {
+	var permutaionNumber int
 	var permutaion func([]int, int)
 	permutaion = func(permutes []int, size int) {
 		if size == len(permutes) {
+			if permutaionNumber == permutationlimit {
+				return
+			}
 			permutesArray = append(permutesArray, append([]int{}, permutes...))
+			permutaionNumber++
 		} else {
 			for i := size; i < len(array); i++ {
 				permutes[size], permutes[i] = permutes[i], permutes[size]
@@ -103,13 +101,7 @@ func permutationBlock(array []int) (permutesArray [][]int) {
 	return permutesArray
 }
 
-func randomNumber(number int) int {
-	var x1 = rand.NewSource(time.Now().UnixNano())
-	var y1 = rand.New(x1)
-	var randomIndex int = y1.Intn(number)
-	return randomIndex
 
-}
 func bToMb(b uint64) uint64 {
     return b / 1024 
 }
