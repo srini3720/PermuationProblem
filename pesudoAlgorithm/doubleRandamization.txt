@@ -1,0 +1,62 @@
+// Algorithm for double randamization
+
+1.    if N=3 then randomized array Eg [3,1,2],[2,1,3],[1,2,3]
+      if N=4 then randomized array Eg [2,1,3,4],[3,2,4,1],[4,3,1,2]
+
+2.     Randomize the array
+         if N=3 then randamized array = [3,1,2]
+           random allotment  student 1 = 3
+                             student 2 = 2
+                             student 3 = 1
+
+3.Next iteration step 1 and step 2
+
+4.if subsectionSize is same for current student and previous student then random and return  randamizedarray[random]
+
+
+
+pseudo code :
+
+makeArray(size) => Number = 3 or 4 (subsection)
+        // make array with size of number and randamize
+        
+        array = []
+        for (i=0; i<size; i++) {
+            array.push(i+1)
+        }
+
+        // shuffle the array
+        for (i=0; i<size; i++) {
+            let randomNumber = rand.intn(size)
+            let temp = array[i] 
+            array[i] = array[rand]
+            array[rand] = temp
+        }
+        return array
+
+
+// allotment
+allotment(subsectionSize) {
+    if(len(randamizedarray) != 0 && subsectionSize == subsectionSizeGlobal) {
+        random = rand.intn(len(randamizedarray))
+        return randamizedarray[random]
+    }
+    else {
+    randomizedarray = makearray(subsectionSize)
+    random = rand.intn(len(randamizedarray))
+    return randamizedarray[random]
+    }
+
+}
+
+
+//main function
+  global variabkle
+    randamizedarray = []
+    subsectionSizeGlobal;
+main() {
+
+   student 1 = allotment(3) =>2
+   student 2 = allotment(4) =>3
+
+}
