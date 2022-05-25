@@ -77,6 +77,7 @@ func makeArray(num int) []int {
 		arrayTwo[i] = i + 1
 	}
 	var array []int = append(arrayOne, arrayTwo...)
+	fmt.Println("subsection Array :", array)
 	return array
 }
 
