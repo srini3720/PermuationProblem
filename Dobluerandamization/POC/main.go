@@ -6,17 +6,17 @@ import (
 	"runtime"
 	"math/rand"
 	"container/list"
+	"strings"
 )
 
 
 var subsectionSequence []int
-var subsectionIndex int
 var subsectionlist = list.New()
 
 func main() {
 	start := time.Now()
-	var subsectionArraysize int64 = 10
-	var totalStuInsamecourseAndSub int64 = 100
+	var subsectionArraysize int64 = 2
+	var totalStuInsamecourseAndSub int64 = 1
 	fmt.Println("subsectionArraysize :", subsectionArraysize)
 	fmt.Println("totalStuInsamecourseAndSub :", totalStuInsamecourseAndSub)
 	fmt.Println("------------------------DoubleRandamization----------------------------")
@@ -38,27 +38,45 @@ func main() {
 
 
 
+// func doublerandamization(subsectionArraysize int64) int {
+	
+// 	if (len(subsectionSequence) != 0 && subsectionIndex != 0 && subsectionIndex < len(subsectionSequence)) {
+// 		var randomSubsection int =subsectionSequence[subsectionIndex]
+// 		subsectionIndex = subsectionIndex + 1
+// 		return randomSubsection
+// 	}
+// 	if len(subsectionSequence) >= subsectionIndex {
+// 		subsectionIndex =0
+// 		var subsectionArray []int= makeArray(int(subsectionArraysize))
+// 		fmt.Println("subsection Array :", subsectionArray)
+// 		var shuffledArray []int = shuffleArray(subsectionArray)
+// 		subsectionSequence = shuffledArray
+// 		fmt.Println("shuffled Array :", shuffledArray)
+// 		var allotment int = allotmentStudents(shuffledArray)
+// 		var arrayString string = arrayToString(shuffledArray, ",")
+// 		subsectionlist.PushBack(arrayString)
+		
+// 		return allotment
+// 	}
+// 	return 0
+// }
 func doublerandamization(subsectionArraysize int64) int {
 	
-	if (len(subsectionSequence) != 0 && subsectionIndex != 0 && subsectionIndex < len(subsectionSequence)) {
-		var randomSubsection int =subsectionSequence[subsectionIndex]
-		subsectionIndex = subsectionIndex + 1
-		return randomSubsection
-	}
-	if len(subsectionSequence) >= subsectionIndex {
-		subsectionIndex =0
+	if (len(subsectionSequence) == 0) {
 		var subsectionArray []int= makeArray(int(subsectionArraysize))
-		fmt.Println("subsection Array :", subsectionArray)
 		var shuffledArray []int = shuffleArray(subsectionArray)
 		subsectionSequence = shuffledArray
 		fmt.Println("shuffled Array :", shuffledArray)
 		var allotment int = allotmentStudents(shuffledArray)
-		subsectionlist.PushBack(subsectionArray)
+		var arrayString string = arrayToString(shuffledArray, ",")
+		subsectionlist.PushBack(arrayString)
 		
 		return allotment
 	}
-	
-	// fmt.Println("student is in index of Heap Method subsection :", allotment)
+	if len(subsectionSequence) != 0 {
+		var allotment int = allotmentStudents(subsectionSequence)
+		return allotment
+	}
 	return 0
 }
 func makeArray(num int) []int {
@@ -80,12 +98,12 @@ func shuffleArray(array []int) []int {
 		array[i] = array[randomNumber]
 		array[randomNumber] = temp
 	}
-	// if belongsToList(array) {
-	// 	return shuffleArray(array)
-	// }
-	for e := subsectionlist.Front(); e != nil; e = e.Next() {
+	var arrayStr string = arrayToString(array, ",")
 
-		fmt.Println("subsection List", e.Value)
+	for e := subsectionlist.Front(); e != nil; e = e.Next() {
+		if e.Value == arrayStr {
+			return shuffleArray(array)
+		}
 	}
 	return array
 }
@@ -96,7 +114,6 @@ func bToMb(b uint64) uint64 {
 func PrintMemUsage() {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
-	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
 	fmt.Printf("Alloc = %v KB", bToMb(m.Alloc))
 	fmt.Printf("\tTotalAlloc = %v KB", bToMb(m.TotalAlloc))
 	fmt.Printf("\tSys Memory Usage = %v KB", bToMb(m.Sys))
@@ -112,17 +129,21 @@ func randomNumber(number int) int {
 }
 
 func allotmentStudents(array []int ) int {
-	subsectionIndex = subsectionIndex + 1
+	
 	var randomNumber int = randomNumber(len(array))
+	subsectionSequence = removeIndexFromArray(array,randomNumber)
+	fmt.Println("subsectionSequenceAfter removed index :",subsectionSequence)
 	return array[randomNumber]
 
 }
 
-// func belongsToList(lookup string) bool {
-// 	for _, val := range subsectionlist {
-// 		if val == lookup {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
+
+func arrayToString(array []int, delim string) string {
+    return strings.Trim(strings.Replace(fmt.Sprint(array), " ", delim, -1), "[]")
+    //return strings.Trim(strings.Join(strings.Split(fmt.Sprint(array), " "), delim), "[]")
+    //return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(array)), delim), "[]")
+}
+
+func removeIndexFromArray(array []int, Index int) []int {
+    return append(array[:Index], array[Index+1:]...)
+}
